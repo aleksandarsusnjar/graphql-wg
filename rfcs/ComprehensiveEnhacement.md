@@ -60,7 +60,7 @@ This would yield the result `<alias>` to be:
 Example:
 ```GraphQL
 query {
-  example: foo.bar.far { number }
+  example: foo?.bar?.far { number }
 }
 ```
 ... could yield:
@@ -152,7 +152,9 @@ Examples:
 
 ```GraphQL
 scalar inet.IP4AddressLiteral
-enum org.iso.iso3166_1.ThreeLetterCountryCode ...
+enum org.iso.iso3166_1.ThreeLetterCountryCode {
+    ...
+}
 object org.example.Computer {
   ip4Address: inet.IP4AddressLiteral
   countryCode: org.iso.iso3166_1.ThreeLetterCountryCode
@@ -264,7 +266,7 @@ extend type __Directive {
 
 When composing large schemas of not entirelly coordinated projects, such as when "stitching" or "federating" them parts of schema obtained from different sources could introduce what would so far appear as the same field with conflicting definitions. Some ways to address this are to either rename those fields at the source (often impossible) or to apply some sort of runtime renaming (that introduces incompatibilities and may not be easy). 
 
-Additionally, there exist property naming standards, such as (Dublin Core)[https://www.dublincore.org/specifications/dublin-core/dcmi-terms/] and it would be useful to be able to encode these in a standard, modular fashion in GraphQL.
+Additionally, there exist property naming standards, such as [Dublin Core](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/) and it would be useful to be able to encode these in a standard, modular fashion in GraphQL.
 
 Using fully qualified names for fields would be cumbersome for a variety of reasons:
 
@@ -727,11 +729,12 @@ type graphql.Operation {
 }
 ```
 A valid request example can be:
+
 ```GraphQL
 {
   pour(content: "Stuff")?
 }
-
+```
 ... as `graphql.NothingYet` has no value, scalar or complex/object. That request continues to work even if the server/schema is updated to:
 
 ```GraphQL
@@ -778,7 +781,7 @@ Examples to iillustrate this without going into a full proposal:
 ### Execution ordering
 
 GraphQL is predominantly leaving the execution order unstated and up to the server to choose.
-The only exception to this are the (root, top-level) mutations. See (6.2.2 Mutation)[https://spec.graphql.org/October2021/#sec-Mutation]:
+The only exception to this are the (root, top-level) mutations. See [6.2.2 Mutation](https://spec.graphql.org/October2021/#sec-Mutation):
 
 > If the operation is a mutation, the result of the operation is the result of executing the operation’s top level selection set on the mutation root object type. This selection set should be executed serially.
 
@@ -825,7 +828,7 @@ operation {
 
 > Additional note: servers that can determine inter-dependency of individual steps (or lack thereof) can
 > adjust the order and use parallel execution even when `[`...`]` is used, similar to how 
-> (superscalar processors)[https://en.wikipedia.org/wiki/Superscalar_processor] do the same.
+> [superscalar processors](https://en.wikipedia.org/wiki/Superscalar_processor) do the same.
 > They could also examine `{`...`}` blocks the same way but this is not required and not to be expected.
 > It is the clients' responsibility to understand implications of combining operations and use `[`...`]`
 > if unsure. IDEs and validation tools can issue warnings if operations with side-effects are nested 
@@ -909,6 +912,19 @@ directive @graphql.uses(
 
 ... such that having at least one common scope in one operations "affects" and another operations "uses" list means that the second operation could be affected by the first one. The scope ids are arbitrary and up to the server / schema designer. Proxy servers / schema aggregation tools may transform those ids, e.g. by prefixing them, so the servers should not rely on clients getting the same ids.
 
+Example:
+
+```GraphQL
+type graphql.Operation {
+  getPerson(id: ID!): Person @graphql.uses(scopes: ["db:people"])
+  newPerson(input: PersonInput!): Person @graphql.uses(scopes: ["db:people"]) @graphql.affects(scopes: ["db:people"])
+  getGroup(id: ID!): Group @graphql.uses(scopes: ["db:groups"])
+}
+```
+
+Ignoring nested invocations with their effects, we can see that `newPerson` could affect `getPerson` but not `getGroup`.
+
+
 ## Redirected outputs, streams / channels (new subscriptions)
 
 With this proposal the way to replace legacy subscriptions is to use fields that have no immediatelly returnable values but will send or keep sending those values, as they become available, to a contextually specified (documented) destination which we may call a stream, channel, pipe or pipeline. Actual destinations are not the topic of this proposal and are intentionally left for the API designed to specify. It would, however, be nice to have a standard how to do this with GraphQL/HTTP specifically.
@@ -969,7 +985,7 @@ At any point of time later the client could invoke the following to directly uns
 
 ```GraphQL
 {
-  unsubscribe(subscriptionId: ...)?
+  unsubscribe(subscriptionId: 123)?
 }
 ```
 
