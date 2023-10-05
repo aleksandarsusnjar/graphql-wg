@@ -1337,7 +1337,15 @@ empty type Mutation
 empty type Subscription
 empty type graphql.Operation
 
+empty interface SeedInterface
+
+# Cannot directly declare an empty type implementing an interface
 empty type Custom implements SomeInterface
+# ... but that can be restated as follows:
+empty type Custom
+extend type Custom implements SomeInterface {
+  ...
+}
 
 empty type Bad1 {}       # Error: field block present, though empty
 empty type Bad2 { ... }  # Error: field block present
