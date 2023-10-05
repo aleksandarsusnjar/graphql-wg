@@ -207,7 +207,7 @@ namespace org.example {
 
 ### Default type and directive reference namespace
 
-If `scalar`, `enum`, `union`, `interface`, `object`, `input` and directive declarations use unqualified identifiers then the assumed namespace is the one declared in the nearest containing (new) namespace block that contains the referenced declaration.
+If `scalar`, `enum`, `union`, `interface`, `object`, `input` and directive references use unqualified identifiers then the assumed namespace is the one declared in the nearest containing (new) namespace block that contains the referenced declaration.
 
 Example:
 
@@ -225,6 +225,8 @@ namespace org.example {
   }
 }
 ```
+
+Additional rule allows us to safely define new elements in a dedicated namespace and still access it conveniently: if the above search fails to find the referenced element, one more default applies - the `graphql` namespace.
 
 The following introspection schema changes are needed:
 
@@ -572,6 +574,27 @@ with org.example {
 
 - `__` - explicit root namespace
 - `graphql` - reserved space for future needs while avoiding potential conflicts
+
+## Automatic (default) namespace determinism
+
+Determining the default namespace for unqualified identifiers relies on the search across specified candidate namespaces. This is trivial to state but introduces a question which namespaces are known at any one point during parsing and what is the "content" within those namespaces at the same time.
+
+Just using what was parsed previously would fail to account for forward references needed for cyclic relations between elements, varying order of parsing multi-file schemas and use of `extend` to modify existing definitions. Our options are to either introduce and leverage the parsing order or to define ways to address this such that the parsing order is not important. We'll try to support any order as the approach is more flexible and easier to use, though it does introduce additional parser complexity. The approach can be summed up as follows:
+
+*Namespace defaulting for any one element will only be done after all chances of it being affected are eliminated.*
+
+What that means in practice is that the process of translating the schema into an actionable model must be split into multiple phases:
+
+1. Parse everything without resolving any namespaceable identifiers, qualified or not. This is simply to gather all split/spread defintions together. Keep a record of all references (again, qualified or not) that will need to be resolved.
+2. Resolve `namespace` identifiers, nested and not.
+3. Resolve `scalar`, `enum`, `interface`, `type`, `union`, `input` and `directive` ***declarations*** (not field or input argument type references, see next).
+4. Resolve field/output and input argument type references.
+5. Resolve `interface` field identifiers in interfaces that do not implement (extend) interfaces with unresolved field identifiers. Repeat this process until identifiers of all fields of all interfaces are resolved. Note that this can also be defined/done recursively - to resolve field identifiers of an interface, first ensure that all field identifiers of all interfaces it implements/extends are resolved. 
+6. Resolve all `type` field identifiers.
+7. Resolve all `input` field identifiers.
+8. Resolve all field input argument type identifiers.
+
+Note that relevant collision detection, validation can be done at each resolution step.
 
 # Allow directives on directives
 
@@ -1289,3 +1312,113 @@ namespace org.unicode {
     } @specifiedBy(url: "https://www.unicode.org/reports/tr15")
 } 
 ``` 
+
+# Allow declarations of empty types
+
+It is often useful to split the declarations of common types, such as
+`Query`, `Mutation`, `Subscription` and `Operation` and others across multiple
+files or schema sources. While this can be accomplished using `extend`, exactly one
+of those must be chosen to serve as the seed that does not use the `extend` keyword.
+This is not always possible, such as when there is nothing common to specify in the
+seed and the souyrces are otherwise meant to be independent.
+
+Allowing the ability to `extend` when there is no such seed is problematic as well 
+as it may remove the detection of the expected declaration missing that existing
+projects may rely on. Similarly, simply allowing empty declarations may miss accidental deletions.
+
+To fix this the proposal is to introduce a new keyword, `empty`, to use as a prefix for
+type declarations that have no fields. If that prefix is present, having the field block
+should be considered an error.
+
+Examples:
+```GraphQL
+empty type Query 
+empty type Mutation
+empty type Subscription
+empty type graphql.Operation
+
+empty type Custom implements SomeInterface
+
+empty type Bad1 {}       # Error: field block present, though empty
+empty type Bad2 { ... }  # Error: field block present
+```
+
+# Permit interface types in concrete output
+
+To support scatter-gather aggregation of polymorphic output(s) such that some data sources
+can add fields to objects (also) coming from other sources without having to know the exact
+type, we cannot require that the concrete type is known.
+
+Consider the following example:
+
+Common definition:
+
+```GraphQL
+interface Entity {
+  id: ID!
+}
+interface Animal {
+  species: String!
+}
+interface Pet implements Entity, Animal {
+  id: ID!
+  species: String!
+}
+extend type Query { # or extend type Operation
+  pet(id: ID!): Pet
+  pets: [Pet!]!
+}
+```
+
+Dog store server:
+```GraphQL
+type Dog implements Pet {
+  id: ID!
+  species: String!
+  barkLoudness: Int  
+}
+type Query { # or Operation
+  pet(id: ID!): Pet
+  pets: [Pet!]!
+}
+
+```
+Cat store server:
+```GraphQL
+type Cat implements Pet {
+  id: ID!
+  species: String!
+  whiskerLength: Int  
+}
+type Query { # or Operation
+  pet(id: ID!): Pet
+  pets: [Pet!]!
+}
+```
+
+```
+Ownership server:
+```GraphQL
+extend interface Pet {
+  owner: Person
+}
+type Person {...}
+type Query { # or Operation
+  pet(id: ID!): Pet
+  pets: [Pet!]!
+}
+```
+
+We want an auto-aggregating server to be able to obtain pets from the dog and cat store servers and then get ownership details from the ownership server, which does not know about the concrete type of the pet, nor it cares about it.
+
+To address this:
+
+1. We introduce the special `graphql.Anonymous` type only to be used as the possible value of `__typename` output field. It cannot be referenced directly within the schema or introspected. This is simply to maintain that `__typename` is a non-null `String!`.
+2. (Optional) We introduce the special `__types: {__Type!}` field as a bag (set) of types that can be directly resolved. It is only nullable to support those servers that disable introspection in production.
+3. At least one of the following:
+  - We introduce the special `__typeids: {ID!}!` field that list all applicable `interface` and `type` identifiers known to the source.
+  - We introduce the special `__interfaceids: {ID!}!` field that list all applicable `interface` identifiers known to the source.
+4. We can also introduce `__typeid: ID!` as a new version of `__typename` but this is not required.
+
+... and we allow the servers (and server frameworks) to identigy their instances by their interfaces only and the `graphql.Anonymous` type.
+
