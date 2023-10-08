@@ -1483,4 +1483,5 @@ This proposal attempts to address most of the issues as follows:
     - Fields of non-error types can mix error and non-error types but have to have at least one non-error type listed. In union lists the non-error types must be listed first (this is not hugely important from a functionality standpoint but may help with readability).
     - The fact that a type is an error type is introspectable via the new field in `__Type`.
 4. Error values do not need to be listed in the field selection. All fields are assumed requested, including `__typename`. Fields of those errors that are of error types are also included. Fields of non-error types are not included by default and are subject to standard fragments. 
+5. The requestor has to opt-in to accepting errors to be communicated this way by using `?` suffix or `?.` or `!.` joiners or explicit fragments to indicate the support for this level of GraphQL specification. Without this, the error is communicated traditionally, outside `data` but with all the error fields included within the error structure.
 
