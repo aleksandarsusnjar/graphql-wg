@@ -5,6 +5,15 @@
 > is to present them together precisely to show how they work and enhance each
 > other, making sure they don't conflict.
 
+> **References, relates to or affects the following other RFCs:**
+>
+> - [RFC: GraphQL Input Union](InputUnion.md)
+> - [RFC: Client Controlled Nullability](ClientControlledNullability.md)
+> - [RFC: Schema Coordinates](SchemaCoordinates.md)
+> - [RFC: Annotation Structs](AnnotationStructs.md) (previously [RFC: Metadata Structs](MetadataStructs.md))
+> - [RFC: GraphQL Subscriptions](Subscriptions.md)
+> - [RFC: GraphQL Defer and Stream Directives](DeferStream.md)
+
 GraphQL has become sufficiently good to be in massive use while continuing to suffer from some major misses. May are subject to specific other proposals here which are great in their own right. The challenge with those is that each appears tightly focused to solving their own challenges. In that they appear to be:
 
 - taking GraphQL in multiple different directions, and
@@ -24,8 +33,8 @@ Examples of some of these misses include:
 - Unmet desire for in-data (embedded) errors often worked around using unions
 - Inability to pass type references as values of input arguments in a way that can be validated by generic tools. Typical workarounds include use of enums but they can't (easily) be (re)generated upon schema composition.
 - Complications around responding with anonymous instances of interface types
-- Lack of input variants/unions
-- Terminology confusion: mutations are passed inside the `query` parameter and we're talking of `operationName` (as well)[https://graphql.org/learn/serving-over-http/#post-request].
+- Lack of input variants/unions (presently, see [RFC: GraphQL Input Union](InputUnion.md)).
+- Terminology confusion: mutations are passed inside the `query` parameter and we're talking of `operationName` [as well](https://graphql.org/learn/serving-over-http/#post-request).
 
 Intent of this RFC is to initiate and focus further GraphQL evolution. I'm taking a first stab at it here. Do note that this proposes multiple additions to the spec as the goal is to try to address multiple issues in a coherent way. I will set some goals and non-goals:
 
@@ -40,20 +49,22 @@ Intent of this RFC is to initiate and focus further GraphQL evolution. I'm takin
 
 While this RFC is a monolith, it is so only to depict the related changes together. Though it would be nice to approve and apply them all at once, that is not required. It is OK to start with some and leave others for later. This also applies within a single complex change.
 
-# Safe navigation (shortcut) operator `?.`
+# Safe navigation (shortcut) operators `?.` and `!.`
 
 This is a convenience feature that can help in cases when complex types with many properties are queried by clients who only need some.
-It is also leveraged to addresses the field namespacing challenges noted later.
+It is also leveraged to addresses the field namespacing challenges noted later. Note the relation with [RFC: Client Controlled Nullability](ClientControlledNullability.md).
 
 The goal is to allow usages of this operator only in field selections with an explicit alias, such as:
 
 ```
-  <alias> `:` <field-ref-1> `?.` <field-ref-2> `?.` <field-ref-3> <opt-selection>
+  <alias> `:` <field-ref-1> ((`?.` | `!.`) <field-ref-2>)*  <opt-selection>
 ```
 
 This would yield the result `<alias>` to be:
 
-- `null` if any `<field-ref-#>` in the path yields `null`,
+- if a specific `<field-ref-#>` in the path yields `null`:
+    - `null` in case of `?.`
+    - error in case of `!.`
 - otherwise, if all `<field-ref-#>` prior to the last are ***not*** lists, the output of `<field-ref-3> <opt-selection>` only, without nesting into `<field-ref-1>` and `<field-ref-2>`.
 - otherwise, a List of all individual outputs of `<field-ref-3> <opt-selection>`, without nesting into `<field-ref-1>` and `<field-ref-2>`.
 
@@ -89,11 +100,13 @@ This is a complex topic discussed before. Proposal here differs a bit to take in
 
 ## Identifiers, `.` (dot) as a namespace delimiter
 
+> Affects: [RFC: Schema Coordinates](SchemaCoordinates.md)
+
 To remain compatible with every possible valid implementation of prior specs, we cannot unambiguosly reuse a character that is already permitted in GraphQL identifiers within those identifiers. We could opt to split the namespace from the name in more profound ways that would not rely on this but it would yield syntax that is more cumbersome to use. Software developers using many different programming languages are already well used separating their namespaces or package names using `.` so this plays well with familiarity, readability and the learning curve.
 
 This change introduces the `.` character as a valid part of GraphQL namespaced identifiers but with explicitly stated semantics - namespaces.
 
-Currently, the (October 2021 GraphQL spec)[https://spec.graphql.org/October2021/#sec-Names] states:
+Currently, the [October 2021 GraphQL spec](https://spec.graphql.org/October2021/#sec-Names) states:
 
 ```
 Name ::
@@ -643,7 +656,11 @@ and append
 
 # Introspectable directives
 
-There have been multiple attempts to expose additional/custom schema metadata inside introspection in a variety of ways. Meanwhile, many ended up communicating the schema directly, bypassing introspection, to gain access to directives. The proposed approach can make the status quo valid in a clean way, by defining a new directive:
+There have been multiple attempts to expose additional/custom schema metadata inside introspection in a variety of ways. Meanwhile, many ended up communicating the schema directly, bypassing introspection, to gain access to directives.
+
+> This is an alternate (counter) proposal to the [RFC: Annotation Structs](AnnotationStructs.md) and, previously, [RFC: Metadata Structs](MetadataStructs.md).
+
+The proposed approach can make the status quo valid in a clean way, by defining a new directive:
 
 ```
 """
@@ -953,6 +970,8 @@ Ignoring nested invocations with their effects, we can see that `newPerson` coul
 
 
 ## Redirected outputs, streams / channels (new subscriptions)
+
+> Related: [RFC: GraphQL Subscriptions](Subscriptions.md) and [RFC: GraphQL Defer and Stream Directives](DeferStream.md).
 
 With this proposal the way to replace legacy subscriptions is to use fields that have no immediatelly returnable values but will send or keep sending those values, as they become available, to a contextually specified (documented) destination which we may call a stream, channel, pipe or pipeline. Actual destinations are not the topic of this proposal and are intentionally left for the API designed to specify. It would, however, be nice to have a standard how to do this with GraphQL/HTTP specifically.
 
@@ -1429,4 +1448,3 @@ To address this:
 4. We can also introduce `__typeid: ID!` as a new version of `__typename` but this is not required.
 
 ... and we allow the servers (and server frameworks) to identigy their instances by their interfaces only and the `graphql.Anonymous` type.
-
