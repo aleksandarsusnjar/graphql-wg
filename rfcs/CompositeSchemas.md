@@ -57,3 +57,4 @@ If this is of interest to you, please enter your name, GitHub handle, and organi
 | Jonny Green       | @jonnydgreen  | Unity            | Bath, UK            |
 | Daniel Winter     | @d-winter     | Hygraph          | Gießen, DE          |
 | Jonas Faber       | @flexzuu      | Hygraph          | Butzbach, DE        |
+| Aleksandar Susnjar| @aleksandarsusnjar |             | Markham, ON, Canada |
