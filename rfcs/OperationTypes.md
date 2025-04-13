@@ -4,6 +4,13 @@
 
 **Part of:** [RFC: Comprehensive Enhancements](ComprehensiveEnhacement.md)
 
+**Requires / builds on:**
+- [RFC: Namespace support](Namespacing.md)
+
+**Relied upon by:**
+
+ - [RFC: Transactions](Transactions.md)
+
 Present operation division into queries, mutations and subscriptions is noble in intent but is causing multiple challenges:
 
 - Clarity about what constitutes side-effects
