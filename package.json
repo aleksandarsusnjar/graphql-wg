@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "gen-agenda": "wgutils agenda gen"
+  },
+  "devDependencies": {
+    "prettier": "^2.1.2",
+    "wgutils": "^1.2.5"
+  },
+  "prettier": {
+    "proseWrap": "always"
+  }
+}

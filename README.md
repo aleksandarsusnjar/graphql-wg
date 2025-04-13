@@ -51,19 +51,26 @@ track of future upcoming meetings by subscribing to the [Google Calendar][] or
 [ical]:
   https://calendar.google.com/calendar/ical/linuxfoundation.org_ik79t9uuj2p32i3r203dgv5mo8%40group.calendar.google.com/public/basic.ics
 
+To create the agenda files for a given month YYYY/MM, run the following command:
+
+```
+yarn && yarn gen-agenda YYYY MM
+```
+
 ### Subcommittee meetings
 
 The GraphQL WG has subcomittees who focus on the development of specific
 projects beyond the GraphQL Spec. These subcomittees make progress within their
 own meetings and report back progress and decisions to GraphQL WG meetings.
 
-<!-- prettier-ignore -->
-| Subcommittee     | Time                          | Host                                               | Agenda Repo                                                                                       |
-| ---------------- | ----------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| GraphiQL         | 2nd Tue, 9:00am - 11:00am PT  | [Tim Suchanek](https://github.com/timsuchanek)     | [graphql/graphiql/working-group](https://github.com/graphql/graphiql/tree/main/working-group)     |
-| GraphQL.js       | 4th Wed, 10:00am - 11:00am PT | [Ivan Goncharov](https://github.com/IvanGoncharov) | [graphql/graphql-js-wg](https://github.com/graphql/graphql-js-wg)                                 |
-| Incremental Delivery | Most Mondays, 7:00am - 8:00am PT | [Rob Richard](https://github.com/robrichard)    | [robrichard/defer-stream-wg](https://github.com/robrichard/defer-stream-wg)
-| Client Controlled Nullability | 4th Wed, 12:00pm - 1:00pm PT | [Stephen Spalding](https://github.com/fotoetienne) | [graphql/client-controlled-nullability-wg](https://github.com/graphql/client-controlled-nullability-wg) |
+| Subcommittee         | Time                           | Host                                               | Agenda Repo                                                                                                     |
+| -------------------- | ------------------------------ | -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| GraphiQL             | 2nd Tue, 9:00am - 11:00am PT   | [Tim Suchanek](https://github.com/timsuchanek)     | [graphql/graphiql/working-group](https://github.com/graphql/graphiql/tree/main/working-group)                   |
+| GraphQL-over-HTTP    | 4th Thu, 17:30 - 18:30 UTC     | [Benjie Gillam](https://github.com/benjie)         | [graphql/graphql-over-http/working-group](https://github.com/graphql/graphql-over-http/tree/main/working-group) |
+| Incremental Delivery | 2nd Mon, 10:00am - 11:00am EST | [Rob Richard](https://github.com/robrichard)       | [robrichard/defer-stream-wg](https://github.com/robrichard/defer-stream-wg)                                     |
+| Nullability          | 4th Wed, 19:00 - 20:00 UTC     | [Stephen Spalding](https://github.com/fotoetienne) | [graphql/client-controlled-nullability-wg](https://github.com/graphql/client-controlled-nullability-wg)         |
+| Composite Schema     | 2nd Thu, 16:00am - 17:00am UTC | [Benjie Gillam](https://github.com/benjie)         | [graphql/composite-schemas-wg](https://github.com/graphql/composite-schemas-wg)                                 |
+| GraphQL.js           | 4th Wed, 10:00am - 11:00am PT  | [Jovi DeCroock](https://github.com/JoviDeCroock)   | [graphql/graphql-js-wg](https://github.com/graphql/graphql-js-wg)                                               |
 
 #### Subcommittees on hiatus
 
@@ -72,10 +79,8 @@ topics. Should you have a topic to discuss that applies to a subcommittee that
 is on hiatus, please raise an issue in the WG repository and mention the host.
 
 <!-- prettier-ignore -->
-| Subcommittee     | Time                          | Host                                               | Agenda Repo                                                                                       |
-| ---------------- | ----------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| Composite Schema | 2nd Thu, 8:00am - 10:00am PT  | [Benjie Gillam](https://github.com/benjie)         | [graphql/composite-schemas-wg](https://github.com/graphql/composite-schemas-wg)                   |
-| GraphQL-over-HTTP | 3rd Thu, 8:00am - 10:00am PT  | [Benjie Gillam](https://github.com/benjie)         | [graphql/graphql-over-http/working-group](https://github.com/graphql/graphql-over-http/tree/main/working-group) |
+| Subcommittee         | Time                           | Host                                               | Agenda Repo                                                                                                     |
+| -------------------- | ------------------------------ | -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
 
 ### Joining a meeting?
 

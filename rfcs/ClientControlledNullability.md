@@ -1,3 +1,7 @@
+NOTE: this document is not being worked on at the moment, instead the Nullability WG are currently exploring an alternative solution that addresses many of the same underlying issues in a different way: [Semantic Nullability RFC](SemanticNullability.md).
+
+--- 
+
 # RFC: Client Controlled Nullability
 
 **Proposed by:**
@@ -5,7 +9,7 @@
 - [Alex Reilly](https://github.com/twof) - Yelp iOS
 - [Liz Jakubowski](https://github.com/lizjakubowski) - Yelp iOS
 - [Mark Larah](https://github.com/magicmark) - Yelp Web
-- [Sanae Rosen](<social or github link here>) - Yelp Android
+- Sanae Rosen - Yelp Android
 - [Stephen Spalding](https://github.com/fotoetienne) - Netflix GraphQL Server Infrastructure
 - [Wei Xue](https://github.com/xuewei8910) - Yelp iOS
 - [Young Min Kim](https://github.com/aprilrd) - Netflix UI

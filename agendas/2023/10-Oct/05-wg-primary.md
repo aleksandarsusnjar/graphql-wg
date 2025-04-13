@@ -110,6 +110,12 @@ hold additional secondary meetings later in the month.
 | Alex Reilly      | @twof          | Independent        | San Francisco, CA, US |
 | Martin Bonnin    | @martinbonnin  | Apollo             | Paris, FR             |
 | Benoit Lubek     | @BoD           | Apollo             | Lyon, FR              |
+| Ivan Goncharov   | @IvanGoncharov | Apollo             | Lviv, UA              |
+| Rob Richard      | @robrichard    | 1stDibs            | Jersey City, NJ, US   |
+| Anthony Miller   | @AnthonyMDev   | Apollo             | Las Vegas, NV, US     |
+| Kewei Qu         | @Keweiqu       | Meta               | Menlo Park, CA, US    |
+| Stephen Spalding | @fotoetienne   | Netflix            | Los Gatos, CA, US     |
+| Michael Staib    | @michaelstaib  | ChilliCream        | Zurich, CH            |
 
 ## Agenda
 
@@ -130,5 +136,7 @@ hold additional secondary meetings later in the month.
    - [All open action items (by meeting)](https://github.com/graphql/graphql-wg/projects?query=is%3Aopen+sort%3Aname-asc)
 1. Client Controlled Nullability and True Nullability Schema (30m, Jordan/Benjie)
    - [True Nullability Schema](https://github.com/graphql/graphql-wg/discussions/1394)
+   - [Null-Only-On-Error type (asterisk) RFC](https://github.com/graphql/graphql-spec/pull/1048)
 1. Full Schemas (15min, Martin)
    - [Terminology + Appendix C: built-in definitions](https://github.com/graphql/graphql-wg/discussions/1391)
+   - [spec edits](https://github.com/graphql/graphql-spec/pull/1049)
