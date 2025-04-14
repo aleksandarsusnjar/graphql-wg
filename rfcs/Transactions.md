@@ -1,13 +1,14 @@
-#  RFC: Operation Types
+#  RFC: Transactions
 
 **Proposed by**: [Aleksandar Susnjar](https://github.com/aleksandarsusnjar)
 
 **Part of:** [RFC: Comprehensive Enhancements](ComprehensiveEnhacement.md)
 
 **Requires / builds on:**
-- [RFC: Allow directives on directives](DirectivesOnDirectives.md)
 - [RFC: Namespace support](Namespacing.md)
-
+- [RFC: Allow directives on directives](DirectivesOnDirectives.md)
+- [RFC: Introspectable directives](IntrospectableDirectives.md)
+- [RFC: Operation Types](OperationTypes.md)
 
 Given the remainder of this proposal, single-phase transactions can be implemented as custom transaction operations having individual fields representing supported actions. This accounts for the possibility to have different transaction kinds which may not be combinable by the system. Example:
 
@@ -182,6 +183,24 @@ xa2: commit(transactionId: "958ecbff-94f1-43e3-8117-16d5fd7c4c4c")
 }
 ```
 
+## Introspection 
+
+Transactable operations could be listed within `graphql.Prepare` type, equivalently
+to how fields are listed in `graphql.Operation`, `Query`, `Mutation` and `Subscription`
+types.
+
 ## Separate data area
 
+
+## Compatibility Considerations
+
+### Legacy client + new server
+
+Legacy clients did not have the ability to execute transactions.
+Their requests will continue to be the same.
+
+### New client + legacy server
+
+New clients would fail to prepare the transactions using the `prepare` operations
+and can use that as a proble to check for support.
 

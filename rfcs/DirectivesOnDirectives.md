@@ -5,9 +5,8 @@
 **Part of:** [RFC: Comprehensive Enhancements](ComprehensiveEnhacement.md)
 
 **Relied upon by:**
-
- - [RFC: Introspectable Directives](IntrospectableDirectives.md)
-
+- [RFC: Introspectable Directives](IntrospectableDirectives.md)
+- [RFC: Input expressions that enable powerful DSLs](InputExpressions.md)
 
 Adding directives to directives will allow various schema meta-processing tools to introduce their own additional special processing even for directives they do not define.
 
@@ -50,3 +49,13 @@ TypeSystemDirectiveLocation : one of
   - `DIRECTIVE_DEFINITION`
 ```
 
+## Compatibility Considerations
+
+### Legacy client + new server
+
+Legacy clients do not see or request schema directives at all.
+
+### New client + legacy server
+
+This change alone changes nothing visible to the clients.
+However, see [RFC: Introspectable Directives](IntrospectableDirectives.md).

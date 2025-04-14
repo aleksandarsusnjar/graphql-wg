@@ -5,8 +5,8 @@
 **Part of:** [RFC: Comprehensive Enhancements](ComprehensiveEnhacement.md)
 
 **Requires / builds on:**
-- [RFC: Namespace support](Namespacing.md)
-
+- [RFC: Namespace support](Namespacing.md) (desired but optional)
+- [RFC: Operation Types](OperationTypes.md) (desired but optional)
 
 To support scatter-gather aggregation of polymorphic output(s) such that some data sources
 can add fields to objects (also) coming from other sources without having to know the exact
@@ -84,3 +84,9 @@ To address this:
 4. We can also introduce `graphql.typeid: ID!` and/or `__typeid: ID!` as a new version of `__typename` but this is not required.
 
 ... and we allow the servers (and server frameworks) to identigy their instances by their interfaces only and the `graphql.Anonymous` type.
+
+## Compatibility Considerations
+
+Legacy clients never encountered and, thus, never requested `__interfaceids`.
+
+New clients will either probe for or notice the the support in the introspectable schema.

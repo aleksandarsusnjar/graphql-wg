@@ -6,6 +6,11 @@
 
 **Requires / builds on** [RFC: Allow directives on directives](DirectivesOnDirectives.md)
 
+**Relied upon by:**
+- [RFC: Transactions](Transactions.md)
+- [RFC: Input expressions that enable powerful DSLs](InputExpressions.md)
+
+
 There have been multiple attempts to expose additional/custom schema metadata inside introspection in a variety of ways. Meanwhile, many ended up communicating the schema directly, bypassing introspection, to gain access to directives.
 
 > This is an alternate (counter) proposal to the [RFC: Annotation Structs](AnnotationStructs.md) and, previously, [RFC: Metadata Structs](MetadataStructs.md).
@@ -63,3 +68,12 @@ namespace graphql {
 }
 ```
 
+## Compatibility Considerations
+
+### Legacy client + new server
+
+Legacy clients did not have the means to request schema directives, so their queries will continue not to.
+
+### New client + legacy server
+
+Clients requesting schema directives will fail and will be able to recognize a legacy server that way.

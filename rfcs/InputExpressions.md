@@ -6,6 +6,9 @@
 
 **Requires / builds on:**
 - [RFC: Namespace support](Namespacing.md)
+- [RFC: Operation Types](OperationTypes.md)
+- [RFC: Allow directives on directives](DirectivesOnDirectives.md)
+- [RFC: Introspectable directives](IntrospectableDirectives.md)
 
 
 ## Problem Statement
@@ -333,3 +336,12 @@ extend input Person.Predicate {
   using:  UsingExpression!
 }
 ```
+
+## Compatibility Considerations
+
+Legacy clients never encountered and, thus, never requested this feature.
+Additionally, they would be able to use the legacy (deep-structured) syntax 
+to pass input expressions.
+
+New clients will either be hard-coded to use the new feature or will notice the
+`@operator` directives as introspectable and enable the use of expressions.

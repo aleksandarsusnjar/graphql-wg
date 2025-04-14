@@ -5,8 +5,8 @@
 **Part of:** [RFC: Comprehensive Enhancements](ComprehensiveEnhacement.md)
 
 **See also:**
- - [RFC: GraphQL Composite Schemas](CompositeSchemas.md)
-
+- [RFC: GraphQL Composite Schemas](CompositeSchemas.md)
+- [RFC: Transactions](Transactions.md)
 
 This is a complex topic discussed before. Proposal here differs a bit to take into account additional and different experience of the author(s).
 
@@ -73,7 +73,7 @@ Identifier ::
 
 From this point on all relevant references to `Name` (scalar, enum, union, interface, object type, input type and directive names) should be replaced with `Identifier`. This also applies to field names but there are additional considerations noted later.
 
-A single-character `__` is specially treated as a reference to the root namespace.
+A lone double-underscore `__` is specially treated as a reference to the root namespace.
 
 Two identifiers are considered equal only if they are entirely equal taking into account the namespace. An unqualified identifier is subject to the default namespace within its scope, noted separately.
 
@@ -521,3 +521,33 @@ What that means in practice is that the process of translating the schema into a
 
 Note that relevant collision detection, validation can be done at each resolution step.
 
+## Compatibility Considerations
+
+### Legacy client + new server
+
+Legacy clients do not use the new feature in their queries.
+The exact comprehension (meaning) of the legacy query remains unchanged.
+
+### New client + legacy server
+
+For clients that do not have runtime discovery and rely on queries written before runtime there 
+are no issues as they would be written specifically for a version of the server and would
+use the correct feature set.
+
+Clients that need to be able to work with multiple different server versions need a way 
+to find out whether the server (version) supports this feature or not. This can be done
+with a custom-made query field.
+
+Generic clients, such as IDEs must rely on standard server feature discovery, 
+perhaps as in [RFC: Feature Discovery](FeatureDiscovery.md).
+
+Additionally, such clients can resort to probing / testing with a query such as:
+
+```GraphQL
+query NamespaceSupportDiscovery {
+    __.graphql.Query { __typename }
+}
+```
+
+Such a query would fail if introspection is disabled but, at that point, it is questionable
+what such tools can do and how they would offset the lack of schema discovery. 

@@ -420,7 +420,7 @@ The exact comprehension (meaning) of the legacy query remains unchanged.
 
 ### New client + legacy server
 
-For clients do not have runtime discovery and rely on queries written before runtime there 
+For clients that do not have runtime discovery and rely on queries written before runtime there 
 are no issues as they would be written specifically for a version of the server and would
 use the correct feature set.
 
@@ -441,17 +441,3 @@ query SafeNavigationOperatorSupportQuery {
 
 Such a query would fail if introspection is disabled but, at that point, it is questionable
 what such tools can do and how they would offset the lack of schema discovery. 
-
-The goal is to allow usages of this operator only in field selections with an explicit alias, such as:
-
-```
-  <alias> `:` <field-ref-1> ((`?.` | `!.`) <field-ref-2>)*  <opt-selection>
-```
-
-This would yield the result `<alias>` to be:
-
-- if a specific `<field-ref-#>` in the path yields `null`:
-    - `null` in case of `?.`
-    - error in case of `!.`
-- otherwise, if all `<field-ref-#>` prior to the last are ***not*** lists, the output of `<field-ref-3> <opt-selection>` only, without nesting into `<field-ref-1>` and `<field-ref-2>`.
-- otherwise, a List of all individual outputs of `<field-ref-3> <opt-selection>`, without nesting into `<field-ref-1>` and `<field-ref-2>`.

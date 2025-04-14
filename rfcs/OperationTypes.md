@@ -8,8 +8,8 @@
 - [RFC: Namespace support](Namespacing.md)
 
 **Relied upon by:**
-
  - [RFC: Transactions](Transactions.md)
+
 
 Present operation division into queries, mutations and subscriptions is noble in intent but is causing multiple challenges:
 
@@ -166,7 +166,7 @@ operation {
 }
 ```
 
-> Additional note: servers that can determine inter-dependency of individual steps (or lack thereof) can
+> **Additional note:** servers that can determine inter-dependency of individual steps (or lack thereof) can
 > adjust the order and use parallel execution even when `[`...`]` is used, similar to how 
 > [superscalar processors](https://en.wikipedia.org/wiki/Superscalar_processor) do the same.
 > They could also examine `{`...`}` blocks the same way but this is not required and not to be expected.
@@ -193,44 +193,85 @@ This ensures that `a1`, `a2` and `a3` will be executed before any of the `b1`, `
 
 To indicate that any output field order is acceptable (separate from the execution order), we must have the ability to mark either the entire block as not requiring field order or have the means to indicate that order stops being important after a few "header" fields. For example, it may be important to get the `__typename` and `id` first, followed by anything and everything else. As directives are attached to elements and not the space between elements and fragment nesting and field merging can make directives additionally unsuitable.
 
-A syntactic element, a symbol or a keyword is needed to mark this. Here `*` is proposed as it is easy to type on most keyboards and is often used as a wildcard implying flexibility. Multiple proposed alternatives follow:
+A syntactic element, a symbol or a keyword is needed to mark this. Here `*` is proposed as it is easy to type on most keyboards and is often used as a wildcard implying flexibility. Multiple proposed alternatives follow.
 
-#### `*` as a block separator
+#### Alternative 1: Unordered fragment
 
-The asterisk `*` is chosen to mean "output field order is not important after this point" and is placed between the fields and/or fragments in the requests. For example:
+A special inline fragment is introduced that is by updating [2.8.2 Inline Fragments](https://spec.graphql.org/draft/#sec-Inline-Fragments) from:
+
+> *InlineFragment*:
+>
+> ... TypeCondition? Directives? SelectionSet
+
+to:
+
+> *InlineFragment*:
+>
+> ... (TypeCondition | '%') ? Directives? SelectionSet
+
+... such that when `%` is used instead of the type condition it retains the type of the outer context but states that the order of fields does not need to be maintained.
 
 ```GraphQL
 operation {
   subject(id: 123) {      
     __typename
     id
-    *
+    ...% { # Server may return inner fields in any order
+        name
+        location
+    }
+  }
+}
+```
+
+> **Note:** may also be applied to ordered-execution blocks `[`...`]` as execution may need to be in order
+> but the response serialization does not.
+
+#### Alternative 2: Ordered/unordered divider
+
+The `%%%` is chosen to mean "output field order is not important after this point" and is placed between the fields and/or fragments in the requests. For example:
+
+```GraphQL
+operation {
+  subject(id: 123) {      
+    __typename
+    id
+    %%% # Server may return remaining fields in any order
     name
     location
   }
 }
 ```
 
-... would mean that `__typename` and `id` need to be output in that specific order but can be followed by any order of `name` and `location`.
+> **Note:** may also be applied to ordered-execution blocks `[`...`]` as execution may need to be in order
+> but the response serialization does not.
 
-This alternative can be easily modified if so decided to use a different, perhaps multi-character separator or keyword, such as `***`. Do note that keywords cannot be used here as they may end up conflicting with field names and directives would be attached to a field, not the space between, and may move together with the field during merging.
+Do note that keywords cannot be used here as they may end up conflicting with field names and directives would be attached to a field, not the space between, and may move together with the field during merging.
 
-#### `*` for the entire block
+#### Alternative 3: Unordered block/fragment
 
-Consider the simplification of the previous alternative where `*` is only permitted to be at the very beginning of a block and nowhere else. The same outcome can be accomplished using anonymous (or other) fragments:
+Consider the simplification of the previous alternative where `%%%` is only permitted to be at the very beginning of a block and nowhere else. The same outcome can be accomplished using anonymous (or other) fragments:
 
 ```GraphQL
 operation {
   subject(id: 123) {
     __typename
     id
-    ... {*
+    ... {% # Server may return remaining fields in any order
       name
       location
-    }
+    %}
   }
 }
 ```
+
+The example above ends the block in a similar fashion, though this may be optional. Angle brackets `<`...`>` or  
+a brace decorator character other than `%` could be used. However, we may want to avoid ending the block in 
+`?}`, `!}`, `+}` to avoid clashing with [RFC: Safe navigation (shortcut) and refactoring operators](SafeNavigationAndRefactoring.md).
+
+> **Note:** may also be applied to ordered-execution blocks `[`...`]` as execution may need to be in order
+> but the response serialization does not.
+
 
 ## Side-effect marking (new mutations)
 
@@ -336,3 +377,35 @@ The same approach could be used to do any other applicable subscription manageme
 Also note that multiple streams/channels are possible within the same context, leaving the details to the designer.
 
 It is recommended that properly namespaced types are created by the stakeholders / providers of each transport technolgy such as HTTP async delivery, WebSockets, Apache Kafka, GCP PubSub, etc. as these can then be detected and leveraged by a variety of the tooling including aggregating proxies.
+
+
+## Compatibility Considerations
+
+### Legacy client + new server
+
+Legacy clients do not use the new feature in their queries.
+The exact comprehension (meaning) of the legacy query remains unchanged.
+
+### New client + legacy server
+
+For clients that do not have runtime discovery and rely on queries written before runtime there 
+are no issues as they would be written specifically for a version of the server and would
+use the correct feature set.
+
+Clients that need to be able to work with multiple different server versions need a way 
+to find out whether the server (version) supports this feature or not. This can be done
+with a custom-made query field.
+
+Generic clients, such as IDEs must rely on standard server feature discovery, 
+perhaps as in [RFC: Feature Discovery](FeatureDiscovery.md).
+
+Additionally, such clients can resort to probing / testing with a query such as:
+
+```GraphQL
+operation OperationSupportDiscovery {
+    worksIfSucceeds: __typeName
+}
+```
+
+Such a query would fail if introspection is disabled but, at that point, it is questionable
+what such tools can do and how they would offset the lack of schema discovery. 

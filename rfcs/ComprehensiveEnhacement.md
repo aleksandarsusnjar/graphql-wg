@@ -47,67 +47,22 @@ Intent of this RFC is to initiate and focus further GraphQL evolution. I'm takin
 5. (Non-goal) We can require legacy clients to change before they can leverage new GraphQL features as long as there is a workaround that servers cen employ to continue to support these clients.
 6. (Non-goal) There are no provisions for IDEs and code generation tools - they must be updated 
 
-# Iterative evolution
+## Iterative evolution
 
 While this RFC is a monolith, it is so only to depict the related changes together. Though it would be nice to approve and apply them all at once, that is not required. It is OK to start with some and leave others for later. This also applies within a single complex change.
 
-# Safe navigation (shortcut) and refactoring operators
+## Links to component RFCs
 
-Described in: [RFC: Safe navigation (shortcut) and refactoring operators](SafeNavigationAndRefactoring.md)
-
-
-
-# Namespace support
-
-Described in: [RFC: Namespace support](Namespacing.md)
-
-
-# Allow directives on directives
-
-Described in: [RFC: Allow directives on directives](DirectivesOnDirectives.md)
-
-
-# Introspectable directives
-
-Described in: [RFC: Introspectable directives](IntrospectableDirectives.md)
-
-
-# Operation types
-
-Described in: [RFC: Operation Types](OperationTypes.md)
-
-
-# Transactions
-
-Described in: [RFC: Transactions](Transactions.md)
-
-
-# RFC: Regular expressions support
-
-Described in: [RFC: Regular expressions support](RegularExpressions.md)
-
-
-## Privacy and security directives
-
-Described in: [RFC: Privacy and security directives](SecurityDirectives.md)
-
-
-# Allow declarations of empty types
-
-Described in: [RFC: Allow empty types](EmptyTypes.md)
-
-
-# Permit interface types in concrete output
-
-Described in: [RFC: Permit interface types in concrete output](InterfacesInOutput.md)
-
-
-# Anonymous unions and in-data errors
-
-Described in: [RFC: Anonymous unions and in-data errors](UnionsWithErrors.md)
-
-
-# Input expressions that enable powerful DSLs
-
-Described in: [RFC: Input expressions that enable powerful DSLs](InputExpressions.md)
+- [RFC: Safe navigation (shortcut) and refactoring operators](SafeNavigationAndRefactoring.md)
+- [RFC: Namespace support](Namespacing.md)
+- [RFC: Allow directives on directives](DirectivesOnDirectives.md)
+- [RFC: Introspectable directives](IntrospectableDirectives.md)
+- [RFC: Operation Types](OperationTypes.md)
+- [RFC: Transactions](Transactions.md)
+- [RFC: Regular expressions support](RegularExpressions.md)
+- [RFC: Privacy and security directives](SecurityDirectives.md)
+- [RFC: Allow empty types](EmptyTypes.md)
+- [RFC: Permit interface types in concrete output](InterfacesInOutput.md)
+- [RFC: Anonymous unions and in-data errors](UnionsWithErrors.md)
+- [RFC: Input expressions that enable powerful DSLs](InputExpressions.md)
 

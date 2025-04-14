@@ -9,7 +9,6 @@
 - [RFC: Namespace support](Namespacing.md)
 
 
-
 Very commonly used, including here. Can help a variety of tools, including schema validators.
 
 ```GraphQL
@@ -44,3 +43,8 @@ namespace graphql.text {
   }
 }
 ```
+
+## Compatibility Considerations
+
+This appears as a library of types. Legacy clients that never saw it, never needed it.
+New clients would use it if explicitly coded for it or if they discover it in the schema.

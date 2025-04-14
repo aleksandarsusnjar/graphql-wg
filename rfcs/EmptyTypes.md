@@ -40,3 +40,11 @@ extend type Custom implements SomeInterface {
 empty type Bad1 {}       # Error: field block present, though empty
 empty type Bad2 { ... }  # Error: field block present
 ```
+
+## Compatibility Considerations
+
+Legacy clients never encountered empty types and, thus, never requested
+any instances.
+
+New clients will simply notice that the type has no fields and only in 
+rare occasions when exposed to such a type directly.
