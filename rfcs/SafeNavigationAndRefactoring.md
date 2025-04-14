@@ -1,6 +1,6 @@
 # RFC: Safe navigation (shortcut) and refactoring operators
 
-**Proposed by**: [Aleksandar Susnjar](https://github.com/aleksandarsusnjar)
+**Proposed by**: [Aleksandar Susnjar](https://github.com/aleksandarsusnjar), others welcome to join.
 
 **See also / part of:** [RFC: Comprehensive Enhancements](ComprehensiveEnhacement.md)
 

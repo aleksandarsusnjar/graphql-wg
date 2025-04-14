@@ -1,5 +1,7 @@
 # RFC: Comprehensive Enhancements [UNFINISHED DRAFT]
 
+**Proposed by**: [Aleksandar Susnjar](https://github.com/aleksandarsusnjar), others welcome to join.
+
 > ***This is a collection of coordinated changes that work with each other.***
 > While it may be possible to split those into individual parts, the aim here
 > is to present them together precisely to show how they work and enhance each
@@ -65,4 +67,5 @@ While this RFC is a monolith, it is so only to depict the related changes togeth
 - [RFC: Permit interface types in concrete output](InterfacesInOutput.md)
 - [RFC: Anonymous unions and in-data errors](UnionsWithErrors.md)
 - [RFC: Input expressions that enable powerful DSLs](InputExpressions.md)
+- [RFC: Type references](TypeReferences.md)
 

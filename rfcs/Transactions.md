@@ -1,6 +1,6 @@
 #  RFC: Transactions
 
-**Proposed by**: [Aleksandar Susnjar](https://github.com/aleksandarsusnjar)
+**Proposed by**: [Aleksandar Susnjar](https://github.com/aleksandarsusnjar), others welcome to join.
 
 **Part of:** [RFC: Comprehensive Enhancements](ComprehensiveEnhacement.md)
 

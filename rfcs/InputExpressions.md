@@ -1,6 +1,6 @@
 # RFC: Input expressions that enable powerful DSLs
 
-**Proposed by**: [Aleksandar Susnjar](https://github.com/aleksandarsusnjar)
+**Proposed by**: [Aleksandar Susnjar](https://github.com/aleksandarsusnjar), others welcome to join.
 
 **Part of:** [RFC: Comprehensive Enhancements](ComprehensiveEnhacement.md)
 
@@ -9,6 +9,9 @@
 - [RFC: Operation Types](OperationTypes.md)
 - [RFC: Allow directives on directives](DirectivesOnDirectives.md)
 - [RFC: Introspectable directives](IntrospectableDirectives.md)
+
+**See also:**
+- [RFC: Type references](TypeReferences.md)
 
 
 ## Problem Statement
