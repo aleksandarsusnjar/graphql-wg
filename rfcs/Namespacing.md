@@ -5,7 +5,7 @@
 **Part of:** [RFC: Comprehensive Enhancements](ComprehensiveEnhacement.md)
 
 **See also:**
-- [RFC: GraphQL Composite Schemas](CompositeSchemas.md)
+- [RFC: GraphQL Composite Schemas](CompositeSchemas.md) (affected)
 - [RFC: Transactions](Transactions.md)
 
 This is a complex topic discussed before. Proposal here differs a bit to take into account additional and different experience of the author(s).
@@ -157,22 +157,41 @@ The following introspection schema changes are needed:
 
 ```GraphQL
 extend type __Schema {
-  namespaces: [graphql.Namespace!]!
+  # The following fields allow focused / chunked introspection
+  # of extremely large composite schemas.
+  topLevelNamespaces: [graphql.Namespace!]!
+  namespace(name: String!): graphql.Namespace
 }
 
-type graphql.Namespace {  
-  identifier: ID!
-  superspace: Namespace    # optional
-  subspaces: [Namespace!]! # optional
+"""
+Name (identifier) of a namespace unique within its superspace.
+"""
+scalar graphql.UnqualifiedNamespaceIdentifier
+
+"""
+Fully qualified name of a namespace using the dot notation.
+"""
+scalar graphql.FullyQualifiedNamespaceIdentifier
+
+type graphql.Namespace {
+  name: UnqualifiedNamespaceIdentifier!
+  fullName: FullyQualifiedNamespaceIdentifier!
+  superspace: Namespace      # could leverage superspace?.fullName
+  subspaces: [Namespace!]!   # could leverage subspaces*.fullName
   types: [__Type!]!
   directives: [__Directive!]!
 }
+
+"""
+Fully qualified name of a type using the dot notation.
+"""
+scalar graphql.FullyQualifiedTypeIdentifier
 
 extend type __Type {
   """
   Fully qualified identifier
   """
-  id: ID!
+  fullName: FullyQualifiedTypeIdentifier!
 
   """
   Namespace this type is in.
@@ -180,11 +199,16 @@ extend type __Type {
   namespace: graphql.Namespace!
 }
 
+"""
+Fully qualified name of a directive using the dot notation.
+"""
+scalar graphql.FullyQualifiedDirectiveIdentifier
+
 extend type __Directive {
   """
   Fully qualified identifier
   """
-  id: ID!
+  fullName: FullyQualifiedDirectiveIdentifier!
 
   """
   Namespace this directive is in.
@@ -309,16 +333,38 @@ Introspection schema changes required:
 
 ```GraphQL
 enum graphql.FieldInheritance {
+    """
+    Indicates that the field was automatically (implicitly) inherited.
+    """
     AUTO_INHERITED
+
+    """
+    Indicates that the field was explicitly inherited.
+    """
     INHERITED
+
+    """
+    Indicates that the field is automatically determined to be distinct 
+    (separate) from any same-name fields in supertypes.
+    """
     AUTO_UNINHERITED
+
+    """
+    Indicates that the field is explicitly stated to be distinct 
+    (separate) from any same-name fields in supertypes.
+    """
     UNINHERITED
 }
 
+"""
+Fully qualified name of a field using the dot notation.
+"""
+scalar graphql.FullyQualifiedFieldIdentifier
+
 extend type __Field {
   name: String!
-  namespaces: [graphql.Namespace!]!
-  ids: [ID!]! # namespaces.id + '.' + name
+  namespaces: [graphql.Namespace!]!            # could leverage namespaces?.fullName  
+  fullNames: [FullyQualifiedFieldIdentifier!]! # namespaces.fullName + '.' + name
   inheritance: graphql.FieldInheritance! 
   description: String
   args: [__InputValue!]!
@@ -326,6 +372,7 @@ extend type __Field {
   isDeprecated: Boolean!
   deprecationReason: String
 }
+
 ```
 
 With this, the initial example can be annotated as follows:
