@@ -93,7 +93,7 @@ graph TD
    Unions --> Anon
 
    Errors[In-data errors] --> Unions
-   Errors -> Anon
+   Errors --> Anon
 
    Transactions --> Operations
    Transactions --> Namespaces
