@@ -1,4 +1,4 @@
-# RFC: Comprehensive Enhancements [UNFINISHED DRAFT]
+# RFC: Comprehensive Enhancements [DRAFT]
 
 **Proposed by**: [Aleksandar Susnjar](https://github.com/aleksandarsusnjar), others welcome to join.
 
@@ -56,6 +56,7 @@ While this RFC is a monolith, it is so only to depict the related changes togeth
 ## Links to component RFCs
 
 - [RFC: Safe navigation (shortcut) and refactoring operators](SafeNavigationAndRefactoring.md)
+  (included within: 64-bit integers support and unit conversion as examples)
 - [RFC: Namespace support](Namespacing.md)
 - [RFC: Allow directives on directives](DirectivesOnDirectives.md)
 - [RFC: Introspectable directives](IntrospectableDirectives.md)
@@ -65,7 +66,47 @@ While this RFC is a monolith, it is so only to depict the related changes togeth
 - [RFC: Privacy and security directives](SecurityDirectives.md)
 - [RFC: Allow empty types](EmptyTypes.md)
 - [RFC: Permit interface types in concrete output](InterfacesInOutput.md)
-- [RFC: Anonymous unions and in-data errors](UnionsWithErrors.md)
-- [RFC: Input expressions that enable powerful DSLs](InputExpressions.md)
 - [RFC: Type references](TypeReferences.md)
+- [RFC: Enhanced unions](EnhancedUnions.md)
+- [RFC: Anonymous types](AnonymousTypes.md)
+- [RFC: In-data errors](InDataErrors.md)
+- [RFC: Input Unions](InputUnions.md)
+- [RFC: Input expressions that enable powerful DSLs](InputExpressions.md)
+
+```mermaid
+graph TD
+   SafeNav[Safe navigation]
+   DirDir[Directives on directives]
+   Empty[Empty types]
+   Anon[Anonymous types]
+   Namespaces
+   IfaceOut[Interfaces in output] 
+
+   IntroDir[Introspectable directives] --> DirDir
+
+   Operations[Operation Types] --> Namespaces
+   Security --> Namespaces
+   TypeRefs[Type references] --> Namespaces
+   RegEx[Regular expressions support] --> Namespaces
+
+   Unions[Enhanced unions] --> SafeNav
+   Unions --> Anon
+
+   Errors[In-data errors] --> Unions
+   Errors -> Anon
+
+   Transactions --> Operations
+   Transactions --> Namespaces
+   Transactions --> IntroDir
+
+   InputUnions[Input Unions] --> Anon
+   InputUnions --> TypeRers
+   InputUnions --> Unions
+   InputUnions --> Unions
+
+   Expressions[Input expressions] --> IntroDir
+   Expressions --> Namespaces
+   Expressions --> TypeRefs
+```
+
 

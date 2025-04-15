@@ -7,6 +7,7 @@
 **See also:**
 - [RFC: GraphQL Composite Schemas](CompositeSchemas.md) (affected)
 - [RFC: Transactions](Transactions.md)
+- [RFC: Anonymous types](AnonymousTypes.md)
 
 This is a complex topic discussed before. Proposal here differs a bit to take into account additional and different experience of the author(s).
 
@@ -174,46 +175,70 @@ Fully qualified name of a namespace using the dot notation.
 scalar graphql.FullyQualifiedNamespaceIdentifier
 
 type graphql.Namespace {
-  name: UnqualifiedNamespaceIdentifier!
-  fullName: FullyQualifiedNamespaceIdentifier!
-  superspace: Namespace      # could leverage superspace?.fullName
-  subspaces: [Namespace!]!   # could leverage subspaces*.fullName
+  name: FullyQualifiedNamespaceIdentifier!
+  unqualifiedName: UnqualifiedNamespaceIdentifier!
+  superspace: Namespace      # could leverage superspace?.name
+  subspaces: [Namespace!]!   # could leverage subspaces*.name
   types: [__Type!]!
   directives: [__Directive!]!
 }
+
+"""
+Name (identifier) of a type unique within its superspace.
+"""
+scalar graphql.UnqualifiedNamespaceIdentifier
 
 """
 Fully qualified name of a type using the dot notation.
 """
 scalar graphql.FullyQualifiedTypeIdentifier
 
-extend type __Type {
+type __Type {
   """
   Fully qualified identifier
   """
-  fullName: FullyQualifiedTypeIdentifier!
+  name: FullyQualifiedTypeIdentifier # nullable for anonymous types
+
+  """
+  Short name unique only within the namespace
+  """
+  unqualifiedName: UnqualifiedNamespaceIdentifier # nullable for anonymous types
 
   """
   Namespace this type is in.
   """  
   namespace: graphql.Namespace!
+
+  ...
 }
+
+"""
+Name (identifier) of a directive unique within its superspace.
+"""
+scalar graphql.UnqualifiedDirectiveIdentifier
 
 """
 Fully qualified name of a directive using the dot notation.
 """
 scalar graphql.FullyQualifiedDirectiveIdentifier
 
-extend type __Directive {
+type __Directive {
   """
   Fully qualified identifier
   """
-  fullName: FullyQualifiedDirectiveIdentifier!
+  name: FullyQualifiedTypeIdentifier!
+
+  """
+  Short name unique only within the namespace
+  """
+  unqualifiedName: UnqualifiedNamespaceIdentifier!
 
   """
   Namespace this directive is in.
   """  
   namespace: graphql.Namespace!
+
+  ...
 }
 ```
 

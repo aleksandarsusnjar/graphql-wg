@@ -4,6 +4,9 @@
 
 **Part of:** [RFC: Comprehensive Enhancements](ComprehensiveEnhacement.md)
 
+**Relied upon by:**
+- [RFC: Anonymous types](AnonymousTypes.md)
+
 
 It is often useful to split the declarations of common types, such as
 `Query`, `Mutation`, `Subscription` and `Operation` and others across multiple
