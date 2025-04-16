@@ -74,7 +74,7 @@ While this RFC is a monolith, it is so only to depict the related changes togeth
 - [RFC: Input expressions that enable powerful DSLs](InputExpressions.md)
 
 ```mermaid
-graph BU
+graph BT
   Anon[Anonymous types]
   SafeNav[Safe navigation]
   DirDir[Directives on directives]
