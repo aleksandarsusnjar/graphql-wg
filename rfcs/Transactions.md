@@ -5,8 +5,6 @@
 **Part of:** [RFC: Comprehensive Enhancements](ComprehensiveEnhacement.md)
 
 **Requires / builds on:**
-- [RFC: Namespace support](Namespacing.md)
-- [RFC: Allow directives on directives](DirectivesOnDirectives.md)
 - [RFC: Introspectable directives](IntrospectableDirectives.md)
 - [RFC: Operation Types](OperationTypes.md)
 

@@ -76,7 +76,7 @@ We want an auto-aggregating server to be able to obtain pets from the dog and ca
 
 To address this:
 
-1. We introduce the special `graphql.Anonymous` type only to be used as the possible value of `__typename` output field. It cannot be referenced directly within the schema or introspected. This is simply to maintain that `__typename` is a non-null `String!`.
+1. We introduce the special `graphql.Polymorphic` type only to be used as the possible value of `__typename` output field. It cannot be referenced directly within the schema or introspected. This is simply to maintain that `__typename` is a non-null `String!`.
 2. (Optional) We introduce the special `graphql.types: {graphql.Type!}!` and/or `__types: {__Type!}!` field as a bag (set) of types that can be directly resolved. It is only nullable to support those servers that disable introspection in production.
 3. At least one of the following:
   - We introduce the special `graphql.typeids: {ID!}!` and/or `__typeids: {ID!}!` field that list all applicable `interface` and `type` identifiers known to the source.

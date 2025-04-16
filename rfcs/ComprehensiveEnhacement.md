@@ -74,39 +74,51 @@ While this RFC is a monolith, it is so only to depict the related changes togeth
 - [RFC: Input expressions that enable powerful DSLs](InputExpressions.md)
 
 ```mermaid
-graph TD
-   SafeNav[Safe navigation]
-   DirDir[Directives on directives]
-   Empty[Empty types]
-   Anon[Anonymous types]
-   Namespaces
-   IfaceOut[Interfaces in output] 
+graph BU
+  Anon[Anonymous types]
+  SafeNav[Safe navigation]
+  DirDir[Directives on directives]
+  Namespaces
+  Empty[Empty types]
 
-   IntroDir[Introspectable directives] --> DirDir
 
-   Operations[Operation Types] --> Namespaces
-   Security --> Namespaces
-   TypeRefs[Type references] --> Namespaces
-   RegEx[Regular expressions support] --> Namespaces
+  Unions[Enhanced unions] --> SafeNav
+  Unions --> Anon
 
-   Unions[Enhanced unions] --> SafeNav
-   Unions --> Anon
+  IntroDir[Introspectable directives] --> DirDir 
 
-   Errors[In-data errors] --> Unions
-   Errors --> Anon
+  TypeRefs[Type references] --> Namespaces
 
-   Transactions --> Operations
-   Transactions --> Namespaces
-   Transactions --> IntroDir
+  RegEx --> Namespaces
 
-   InputUnions[Input Unions] --> Anon
-   InputUnions --> TypeRers
-   InputUnions --> Unions
-   InputUnions --> Unions
+  Errors[In-data errors] --> Unions
+  Errors ----> Anon
 
-   Expressions[Input expressions] --> IntroDir
-   Expressions --> Namespaces
-   Expressions --> TypeRefs
+  Operations[Operation Types] --> IntroDir
+  Operations[Operation Types] ----> Namespaces
+
+  Security --> IntroDir
+  Security ----> Namespaces
+
+
+  Transactions --> Operations
+  Transactions ----> IntroDir
+
+  IfaceOut[Interfaces in output] -..-> Operations
+  IfaceOut[Interfaces in output] ------> Namespaces
+  
+
+  InputUnions[Input Unions] -........-> Anon
+  InputUnions -......-> Unions
+  InputUnions -......-> TypeRefs 
+
+
+  Expressions --> InputUnions
+  Expressions[Input expressions] --------> IntroDir
+  Expressions ----------> TypeRefs
+  Expressions -..........-> Namespaces
+  
+  
 ```
 
 

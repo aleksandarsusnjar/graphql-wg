@@ -4,10 +4,14 @@
 
 **Part of:** [RFC: Comprehensive Enhancements](ComprehensiveEnhacement.md)
 
+**Requires / builds on**: 
+- [RFC: Introspectable directives](IntrospectableDirectives.md)
+
 **See also:**
 - [RFC: GraphQL Composite Schemas](CompositeSchemas.md) (affected)
 - [RFC: Transactions](Transactions.md)
 - [RFC: Anonymous types](AnonymousTypes.md)
+
 
 This is a complex topic discussed before. Proposal here differs a bit to take into account additional and different experience of the author(s).
 
