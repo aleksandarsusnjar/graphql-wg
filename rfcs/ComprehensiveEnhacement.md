@@ -72,6 +72,7 @@ While this RFC is a monolith, it is so only to depict the related changes togeth
 - [RFC: In-data errors](InDataErrors.md)
 - [RFC: Input Unions](InputUnions.md)
 - [RFC: Input expressions that enable powerful DSLs](InputExpressions.md)
+- [RFC: Echoes - reflecting outputs back to inputs](Echoes.md)
 
 ```mermaid
 graph BT
@@ -117,6 +118,13 @@ graph BT
   Expressions[Input expressions] --------> IntroDir
   Expressions ----------> TypeRefs
   Expressions -..........-> Namespaces
+
+
+  Echoes --------> Operations
+  Echoes ------------> SaveNav
+  Echoes -..-> InputUnions
+  Echoes -........-> Unions
+  Echoes -........-> TypeRefs
   
   
 ```

@@ -6,6 +6,7 @@
 
 **Requires / builds on:**
 - [RFC: Namespace support](Namespacing.md)
+- [RFC: Introspectable directives](IntrospectableDirectives.md)
 
 **Relied upon by:**
  - [RFC: Transactions](Transactions.md)

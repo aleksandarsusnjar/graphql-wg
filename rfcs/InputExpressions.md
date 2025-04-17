@@ -9,6 +9,7 @@
 - [RFC: Operation Types](OperationTypes.md)
 - [RFC: Allow directives on directives](DirectivesOnDirectives.md)
 - [RFC: Introspectable directives](IntrospectableDirectives.md)
+- [RFC: Input Unions](InputUnions.md)
 
 **See also:**
 - [RFC: Type references](TypeReferences.md)
